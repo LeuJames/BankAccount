@@ -11,9 +11,6 @@ using System.ComponentModel.DataAnnotations;
             [Required]
             [Display(Name = "Amount:")]
             [DataType(DataType.Currency)]
-            [DisplayFormat(NullDisplayText = "-", 
-              ApplyFormatInEditMode = true, 
-              DataFormatString = "{0:C}")]
             public decimal Amount { get; set; }
             public DateTime CreatedAt {get;set;} = DateTime.Now;
             

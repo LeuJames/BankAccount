@@ -64,7 +64,7 @@ namespace BankAccount.Controllers
             return RedirectToAction("Index");
           }
           ViewBag.User = dbContext.Users.FirstOrDefault(u => u.UserId == userId);
-          ViewBag.Transactions =dbContext.Transactions.Include(t => t.Owner)
+          ViewBag.Transactions = dbContext.Transactions.Include(t => t.Owner)
                                                       .Where(t => t.UserId == userId)
                                                       .OrderByDescending(t => t.CreatedAt);
           return View();
@@ -78,15 +78,15 @@ namespace BankAccount.Controllers
           {
             return RedirectToAction("Index");
           }
+          User user = dbContext.Users.FirstOrDefault(u => u.UserId == userId);
+          ViewBag.Transactions = dbContext.Transactions.Include(t => t.Owner)
+                                .Where(t => t.UserId == userId)
+                                .OrderByDescending(t => t.CreatedAt);
+          ViewBag.User = user;
           if(ModelState.IsValid)
           {
-            User user = dbContext.Users.FirstOrDefault(u => u.UserId == userId);
-            ViewBag.Transactions = dbContext.Transactions.Include(t => t.Owner)
-                                            .Where(t => t.UserId == userId)
-                                            .OrderByDescending(t => t.CreatedAt);
             if(user.Balance + newTransaction.Amount < 0)
             {
-              ViewBag.User = user;
               ModelState.AddModelError("Amount", "You cannot withdraw more than your current account balance!");
               return View("Account");
             }
