@@ -63,8 +63,10 @@ namespace BankAccount.Controllers
           {
             return RedirectToAction("Index");
           }
-          ViewBag.User = dbContext.Users.Include(u => u.Transactions)
-                                        .FirstOrDefault(u => u.UserId == userId);
+          ViewBag.User = dbContext.Users.FirstOrDefault(u => u.UserId == userId);
+          ViewBag.Transactions =dbContext.Transactions.Include(t => t.Owner)
+                                                      .Where(t => t.UserId == userId)
+                                                      .OrderByDescending(t => t.CreatedAt);
           return View();
         }
 
@@ -78,8 +80,10 @@ namespace BankAccount.Controllers
           }
           if(ModelState.IsValid)
           {
-            User user = dbContext.Users.Include(u => u.Transactions)
-                              .FirstOrDefault(u => u.UserId == userId);
+            User user = dbContext.Users.FirstOrDefault(u => u.UserId == userId);
+            ViewBag.Transactions = dbContext.Transactions.Include(t => t.Owner)
+                                            .Where(t => t.UserId == userId)
+                                            .OrderByDescending(t => t.CreatedAt);
             if(user.Balance + newTransaction.Amount < 0)
             {
               ViewBag.User = user;
